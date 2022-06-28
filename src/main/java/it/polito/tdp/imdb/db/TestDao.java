@@ -1,5 +1,9 @@
 package it.polito.tdp.imdb.db;
 
+import java.util.Map;
+
+import it.polito.tdp.imdb.model.Actor;
+
 public class TestDao {
 
 	public static void main(String[] args) {
@@ -10,7 +14,8 @@ public class TestDao {
 	public void run() {
 		ImdbDAO dao = new ImdbDAO();
 		System.out.println("Actors:");
-		System.out.println(dao.listAllActors());
+		//Map<Integer,Actor> idMap=
+		//System.out.println(dao.listAllActors());
 		System.out.println("Movies:");
 		System.out.println(dao.listAllMovies());
 		System.out.println("Directors:");

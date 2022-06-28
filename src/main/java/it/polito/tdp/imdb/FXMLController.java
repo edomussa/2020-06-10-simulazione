@@ -7,6 +7,7 @@ package it.polito.tdp.imdb;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.imdb.model.Actor;
 import it.polito.tdp.imdb.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnSimulazione; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGenere"
-    private ComboBox<?> boxGenere; // Value injected by FXMLLoader
+    private ComboBox<String> boxGenere; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxAttore"
-    private ComboBox<?> boxAttore; // Value injected by FXMLLoader
+    private ComboBox<Actor> boxAttore; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtGiorni"
     private TextField txtGiorni; // Value injected by FXMLLoader
@@ -48,17 +49,42 @@ public class FXMLController {
 
     @FXML
     void doAttoriSimili(ActionEvent event) {
-
+    	String g=this.boxGenere.getValue();
+    	Actor a=this.boxAttore.getValue();
+    	if(g!=null && a!=null) {
+    	model.creaGrafo(g);
+    	txtResult.appendText("Attori simili a "+a+":\n");
+    	for(Actor aa:model.getSimili(a)) {
+    		if(aa!=a) {
+    			txtResult.appendText(aa+"\n");
+    		}
+    	}
+    	}
+    	else {
+    		txtResult.appendText("Errore, selezionare genere e attori validi");
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	txtResult.clear();
+    	this.boxAttore.getItems().clear();
+    	String g=this.boxGenere.getValue();
+    	if(g!=null) {
+    		model.creaGrafo(g);
+    		txtResult.appendText(model.getVertAndEdges()+"\n");
+    		this.boxAttore.getItems().addAll(model.getVertici());
+    		this.btnSimili.setDisable(false);
+        	this.btnSimulazione.setDisable(false);
+    	}
+    	else {
+    		txtResult.appendText("Errore,selezionare un genere");
+    	}
     }
 
     @FXML
     void doSimulazione(ActionEvent event) {
-
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -75,5 +101,8 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.boxGenere.getItems().addAll(model.listAllGenres());
+    	this.btnSimili.setDisable(true);
+    	this.btnSimulazione.setDisable(true);
     }
 }
